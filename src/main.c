@@ -15,5 +15,6 @@ void display_banner() {
 
 int main() {
   display_banner();
+  printf("MioChat Telnet";)
   return 0;
 }
