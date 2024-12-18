@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include "message.h"
+
 void display_banner() {
     printf("%s\n"," _____ ______   ___  ________  ________  ___  ___  ________  _________   ");
     printf("%s\n","|\\   _ \\  _   \\|\\  \\|\\   __  \\|\\   ____\\|\\  \\|\\  \\|\\   __  \\|\\___   ___\\ ");
@@ -13,8 +15,12 @@ void display_banner() {
     printf("%s\n","                                                                         ");
 }
 
-int main() {
+int main(int argc, char *argv[]) {
   display_banner();
   printf("MioChat Telnet";)
+
+  if (argc != 2) {
+    error_message("Hello!");
+  }
   return 0;
 }
