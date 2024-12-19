@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "config.h"
+#include "message.h"
 
 #define MAX_LINE_LENGTH 256
 
@@ -54,5 +55,83 @@ int read_config(char *filename, char *key, char *value, int *value_len) {
     if (p == NULL) {
       continue;
     }
+
+    /* find key value */
+    p = strstr(line_buffer, key);
+    if (p == NULL) {
+      continue;
+    }
+
+    p = p + strlen(key);
+
+    p = strchr(p, '=');
+    if (p == NULL) {
+      continue;
+    }
+
+    p = p + 1;
+
+    /* get value start location */
+    for (;;) {
+      if (*p == ' ') {
+        p++;
+      } else {
+        start = p;
+        if (*start == '\n') {
+          goto End;
+        }
+        break;
+      }
+    }
+    for (;;) {
+      if ((*p == ' ' || *p == '\n')) {
+        break;
+      } else {
+        p++;
+      }
+    }
+    end = p;
+
+    /* set value len */
+    *value_len = end - start;
+
+    /* set value data content */
+    memcpy(value, start, end - start);
+  }
+
+End:
+  if (fp == NULL) {
+    fclose(fp);
+  }
+  return 0;
+}
+
+int write_config(char *filename, char *key, char *value, int value_len) {
+  int ret = 0;
+
+  int key_exist = 0;
+
+  int file_length = 0;
+
+  FILE *fp = NULL;
+
+  char line_buffer[MAX_LINE_LENGTH];
+
+  char *p = NULL;
+
+  char file_buffer[1024 * 4] = {0};
+
+  /* identify pointer is vaild */
+  if (filename == NULL || key == NULL || value == NULL) {
+    ret = -1;
+    error_message("pointer is invaild");
+    goto End;
+  }
+
+  fp = fopen(filename, "r+");
+
+  if (fp == NULL) {
+    ret = -2;
+    error_message("fopen");
   }
 }
